@@ -1,0 +1,80 @@
+﻿@model IEnumerable<DBConnection.Models.ServiceCategoryBooking>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Review Reservations</h1>
+<div class=" mainBody">
+    <table class="table table-striped table-bordered" id="all-Bookings-table">
+
+        <thead>
+            <tr>
+
+                <th>
+                    Room Number
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    From Date
+                </th>
+                <th>
+                    To Date
+                </th>
+                <th>
+                    Services
+                </th>
+                <th>
+                    Edit
+                </th>
+            </tr>
+        </thead>
+
+        <tbody id="reservations_table" class="list">
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Booking.Room.Id)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Booking.ApplicationUser.Email)
+                    </td>
+                    <td class="statDate">
+                        @Html.DisplayFor(modelItem => item.Booking.FromDate)
+                    </td>
+                    <td class="endDate">
+                        @Html.DisplayFor(modelItem => item.Booking.ToDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ServiceCategory.Service.Name)
+                    </td>
+                    <td>
+
+                        <a asp-action="Edit" asp-route-id="@item.Booking.Id">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+@section Scripts{
+    <script>
+       $('#all-Bookings-table').dataTable();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            
+        });
+
+
+    </script>
+
+
+}

@@ -1,0 +1,303 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using DBConnection.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model Client.Models.BookViewModel
+
+@{
+    ViewData["Title"] = "Reservation";
+}
+
+
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-md-8">
+                <h2 class="mt0 link-with-icon">Reservation Form</h2>
+                <form asp-action="Create" method="post" class="probootstrap-form">
+
+                    @*______________________________________________________________________*@
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <div class="form-group">
+                            <label asp-for="UserId" class="control-label link-with-icon"></label>
+                            <div class="form-field">
+                                <i class="icon icon-mail"></i>
+                                <label class="form-control">@User.Identity.Name</label>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row mb30">
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                    @*___________________________________________________________________-*@
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label link-with-icon">Category</label>
+                                <div class="form-field">
+                                    <i class="icon icon-chevron-down"></i>
+                                    <select id='catVal' class="form-control" asp-for="categoryID">
+                                        @foreach (var cats in ViewBag.catIds)
+                                        {
+                                            <option value="@cats.Key"> @cats.Value </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label link-with-icon">Types</label>
+                                <div class="form-field">
+                                    <i class="icon icon-chevron-down"></i>
+                                    <select id="specVal" class="form-control" asp-for="specificationID">
+                                        @foreach (var se in ViewBag.speIds)
+                                        {
+                                            <option value="@se.Key">@se.Value</option>
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label link-with-icon">Room Number</label>
+                                <div class="form-field">
+                                    <i class="icon icon-chevron-down"></i>
+                                    <select id="roomVal" class="form-control" asp-for="RoomId">
+                                        
+                                    </select>
+                                    <span asp-validation-for="RoomId"></span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    @*___________________________________________________________________-*@
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="FromDate" class="control-label link-with-icon">Arrival</label>
+                                <input id="startDate" asp-for="FromDate"  class="form-control" />
+                                <span asp-validation-for="FromDate"  class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="ToDate" class="control-label link-with-icon">Departure</label>
+                                <input id="endDate" asp-for="ToDate" class="form-control"  />
+                                <span asp-validation-for="ToDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                         
+        <div class="row">
+            <fieldset>
+                <legend class="link-with-icon">Choose required services</legend>
+                <div id="categoryservices">
+                    
+                </div>
+                <input id="services" type="hidden" asp-for="services" />
+                <br>
+            </fieldset>
+        </div>
+
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary btn-lg" id="submit" name="submit" value="Reserve Now For:">
+                    </div>
+                </form>
+        </div>
+            <div id="room_details" class="col-md-4 hidden">
+                <div class="container room-cards-container">
+                    <div id="room-cards" class="row">
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="probootstrap-room" name="selectCard">
+                                <img id="room_img" src="" class="probootstrap-room-img img-responsive ">
+                                <div class="text">
+                                    <h3 id="room_number"></h3>
+
+                                    <p>Category Name: <strong id="cat_name"></strong></p>
+                                    <p>Specifications: <strong id="spec_name"></strong></p>
+                                    <p>Starting At: <strong id="base_price"></strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            var services = [];
+            $(document).on("click", ".service", function () {
+                services = [];
+                var baseprice = parseInt($("#base_price").text());
+                var sum = baseprice;
+                $("input.service:checked").each(function () {
+                    services.push($(this).val());
+                    var price = $('#price' + $(this).val()).text()
+                    price = parseInt(price);
+                    sum += price;
+                    $("#submit").val("Reserve Now For: " + sum + "!")
+                });
+                $("#services").val(services.toString());
+            });
+
+            function getrooms (){
+                var catSelected = $('#catVal').val();
+                var specSelected = $('#specVal').val();
+                var from = $('#startDate').val();
+                var to = $('#endDate').val();
+                $.ajax({
+                    type: "Get",
+                    url: "getrooms",
+                    data: {
+                        cat_id: catSelected,
+                        spec_id: specSelected,
+                        From: from,
+                        To: to
+
+                    },
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        $("#roomVal").empty();
+                        var noData = true;
+                        $.each(data, function (key, item) {
+                            noData = false;
+                            var option = $("<option>");
+                            option.val(item.RoomId);
+                            option.text(item.Room.FloorNumber);
+                            $("#roomVal").append(option);
+                            $("#room_details").removeClass("hidden");
+                            $('#roomVal').trigger("change");
+                        });
+                        if (noData) {
+                            var option = $("<option>");
+                            option.val(0);
+                            option.text("no Rooms");
+                            $("#roomVal").append(option);
+                            $("#room_details").addClass("hidden");
+                        }
+                    }
+                })
+                
+            }
+
+            function load_old_services() {
+                var old_services = $("#services").val();
+                var old_services_split = old_services.split(',');
+                $("input.service").each(function () {
+                    item = $(this);
+                    $.each(old_services_split, function (key1, id) {
+                        
+                        
+                        if (item.val() == id) {
+                            
+                            item.prop("checked", true);
+                        }
+                        
+                    });
+                });
+
+            }
+
+            $('#catVal').change(function () {
+                getrooms();
+                getServiceCategoryCost($('#catVal').val());
+                
+            });
+            $('#catVal').trigger("change");
+
+            $('#specVal').change(function () {
+                getrooms();
+            });
+
+            $('#endDate').change(function () {
+                getrooms();
+            });
+
+            $('#startDate').change(function () {
+                getrooms();
+            });
+
+            
+
+
+           
+
+            function getServiceCategoryCost(Id) {
+                $.ajax({
+                    type: "Get",
+                    url: "getServiceCategory",
+                    data: {
+                        cat_id: Id,
+                    },
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        $("#categoryservices").empty();
+                        $.each(data, function (key, item) {
+                            var input = `
+                                         <input class="service" type="checkbox" name="${item.Service.Name}" value="${item.ServiceId}">
+                                         <label for="${item.Service.Name}" style="color:black;" >  Name:  <strong>${item.Service.Name}</strong> Cost: <strong id="price${item.ServiceId}">${item.Cost} <\strong> </label>
+                                         <br>`;
+                            $("#categoryservices").append(input);
+                        });
+                    }
+                })
+            }
+
+            $('#roomVal').change(function () {
+                var roomId = $(this).val();
+                console.log(roomId);
+                if (roomId != 0) {
+                    $.ajax({
+                        type: "Get",
+                        url: "getroomDetails",
+                        data: {
+                            roomid: roomId
+                        },
+                        success: function (response) {
+                            var data = JSON.parse(response);
+                            $("#room_number").text(data.Room.FloorNumber);
+                            $("#room_img").attr("src", "https://localhost:44389" + data.Room.ImageUrl);
+                            $("#cat_name").text(data.Room.Category.Name);
+                            $("#spec_name").text(data.Spec.Type);
+                            $("#base_price").text(data.Room.Category.BasePrice);
+                            $("#submit").val("Reserve Now For: " + data.Room.Category.BasePrice + "!");
+                            load_old_services();
+                        }
+                    })
+                }
+                
+            });
+
+
+           
+
+        });
+    </script>
+
+}

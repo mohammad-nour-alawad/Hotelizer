@@ -1,0 +1,170 @@
+﻿@model IEnumerable<DBConnection.Models.Booking>
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Bookings</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-action="#" method="" class="probootstrap-form">
+    <label class="control-label link-with-icon">Select a Period </label>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label link-with-icon">From</label>
+                <input id="startDate" type="datetime-local" class="form-control" />
+                @*<span asp-validation-for="FromDate" class="text-danger"></span>*@
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="control-label link-with-icon">To</label>
+                <input id="endDate" type="datetime-local" class="form-control" />
+                @*<span asp-validation-for="ToDate" class="text-danger"></span>*@
+            </div>
+        </div>
+        
+        </div>
+
+
+
+
+        <table class="table table-striped table-bordered" id="booking-table">
+            <thead>
+                <tr>
+                    <th>
+                        Room
+                    </th>
+                    <th>
+                        User
+                    </th>
+                    <th>
+                        From Date
+                    </th>
+                    <th>
+                        To Date
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Bill
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="Booking_table">
+                 @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Room.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FromDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ToDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bill)
+                    </td>
+
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+</form>
+
+@section Scripts{
+    <script>
+        $('#booking-table').dataTable();
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            function ajaxcall() {
+                var from = $('#startDate').val();
+                var to = $('#endDate').val();
+
+                $('#Booking_table').empty();
+                $.ajax({
+                    type: "Get",
+                    url: "reviewbookings/bookingsFilters",
+                    data: {
+                        From: from,
+                        To: to
+                    },
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        $.each(data, function (key, item) {
+                            var html_view = ` <tr>
+                                                                                                            <td>
+                                                                                                             ${ item.Room.Id}
+                                                                                                            </td>
+
+                                                                                                            <td>
+                                                                                                                ${item.ApplicationUser.Email}
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                ${item.FromDate}
+                                                                                                            </td>
+                                                                                                            <td>
+                                                                                                                ${item.ToDate}
+                                                                                                            </td>
+
+                                                                                                            <td>
+                                                                                                                ${item.Status}
+                                                                                                            </td>
+
+                                                                                                            <td>
+                                                                                                                ${item.Bill}
+                                                                                                            </td>
+
+                                                                                                            <td>
+                                                                                                                <a asp-action="Edit" asp-route-id=${item.Id}>Edit</a> |
+                                                                                                                <a asp-action="Details" asp-route-id=${item.Id}>Details</a> |
+                                                                                                                <a asp-action="Delete" asp-route-id=${item.Id}>Delete</a>
+                                                                                                            </td>
+
+                                                                                                </tr>`
+
+                            $('#Booking_table').append(html_view);
+
+                        });
+                    }
+                })
+            }
+            $(document).on('change', '#endDate', function () {
+                ajaxcall();
+            })
+            $(document).on('change', '#startDate', function () {
+                ajaxcall();
+            })
+        });
+
+    </script>
+
+
+
+
+}

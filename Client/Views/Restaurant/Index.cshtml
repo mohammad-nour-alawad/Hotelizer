@@ -1,0 +1,224 @@
+﻿@model Client.Models.orderViewModel
+@{
+    ViewData["Title"] = "Restaurant";
+}
+
+<style>
+
+    .btn.btn-search {
+        border-radius: 3px;
+        background: #f49999;
+        color: #fff;
+    }
+
+    .search-input:focus {
+        outline: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .bottom-left {
+        position: absolute;
+        left: 16px;
+        bottom: 0px;
+    }
+
+    .probootstrap-section {
+        padding: 0;
+        margin-top: 5vh;
+        margin-bottom: 0;
+    }
+
+    .border {
+        border: 1px solid green;
+        height: 339px !important;
+    }
+
+
+    .h-a {
+        height: fit-content !important;
+        border: none !important;
+    }
+
+</style>
+
+
+
+<section class="probootstrap-slider flexslider probootstrap-inner">
+    <ul class="slides">
+        <li style="background-image: url(@("/img/restaraunt.jpg"));" class="overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="probootstrap-slider-text text-center ">
+                            <h1 class="probootstrap-heading probootstrap-animate">Atlantis Restaraunt</h1>
+                            <div class="probootstrap-animate probootstrap-sub-wrap">@("welcome " + User.Identity.Name )</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+<br />
+<br />
+
+
+
+<section class="probootstrap-section">
+   <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <h3 class="mt0 mb30">Menu</h3>
+                <ul class="probootstrap-owl-navigation absolute right">
+                    <li><a href="#" class="probootstrap-owl-prev"><i class="icon-chevron-thin-left"></i></a></li>
+                    <li><a href="#" class="probootstrap-owl-next"><i class="icon-chevron-thin-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative " id="room-cards">
+                <div class="owl-carousel owl-carousel-carousel">
+
+                    @foreach (var fooditem in ViewBag.FoodItems)
+                    {
+                        <div class="item ">
+                            <div class="probootstrap-room">
+                                <img src="@("https://localhost:44389" + fooditem.ImageUrl)" class="img-responsive probootstrap-room-img">
+                                <div class="text h-a">
+                                    <div class="col-md-6">
+                                        <h3> @fooditem.Name </h3>
+                                        <p>Price: <strong>@fooditem.Cost</strong></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <center>
+                                            <a class="uup"> <i class='icon-chevron-thin-up' style='font-size:12px'></i>  </a>
+                                            <h3 class="quanta"> 0  </h3>
+                                            <a class="ddown"> <i class='icon-chevron-thin-down' style='font-size:12px'></i>  </a>
+                                        </center>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <input type="checkbox" value="@fooditem.Cost" style="display:none;" class="prices" />
+                            <input type="hidden" value="@fooditem.Id" class="ids" />
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h3 class="mt0 link-with-icon">Select Room</h3>
+                <form id="form" asp-action="CreateOrder" class="probootstrap-form">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="form-field">
+                                    <i class="icon icon-chevron-down"></i>
+                                    <select id='serviceID' class="form-control" asp-for="bookingid">
+                                        @foreach (var book in ViewBag.booking)
+                                        {
+                                            <option value="@book.Id"> @book.Room.Id </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a id="order" class="btn btn-primary" role="button">
+                                Order Now For:
+                                <strong id="price">0</strong>
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="fooditemsids" class="form-control" type="hidden" id="listitems" />
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="fooditemsQuantity" class="form-control" type="hidden" id="listquanta" />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="CreateOrder" class="btn btn-primary" style="display:none;" />
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            var sum = 0;
+            var items = {};
+            $('#order').click(function () {
+                $("#form").submit();
+            });
+            $(document).on("click", ".uup", function () {
+                var parent = $(this).closest(".item");
+                var selecteditem = parent.find(".prices");
+                var selectedid = parent.find(".ids");
+                parent.addClass("border");
+                selecteditem.prop("checked", true);
+                if (!(selectedid.val() in items)) {
+                    items[selectedid.val()] = 1;
+                }
+                else {
+                    items[selectedid.val()] = items[selectedid.val()] + 1;
+                }
+                var display = parent.find(".quanta");
+                display.html(items[selectedid.val()]);
+                $('#listitems').val(Object.keys(items));
+                $('#listquanta').val(Object.values(items));
+                $("input.prices:checked").each(function () {
+                    sum = parseInt($(this).val()) * parseInt($(this).closest('.item').find(".quanta").html()) + sum;
+
+                });
+                $("#price").text(sum);
+                sum = 0;
+            });
+            $(document).on("click", ".ddown", function () {
+                var parent = $(this).closest(".item");
+                var selecteditem = parent.find(".prices");
+                var selectedid = parent.find(".ids");
+                var display = parent.find(".quanta");
+                if (!(selectedid.val() in items)) {
+                    items[selectedid.val()] = 0;
+                }
+                else {
+                    items[selectedid.val()] = items[selectedid.val()] - 1;
+                }
+                if (items[selectedid.val()] <= 0) {
+                    selecteditem.prop("checked", false);
+                    display.html(0);
+                    parent.removeClass("border");
+                    delete items[selectedid.val()];
+                }
+                display.html(items[selectedid.val()]);
+                $('#listitems').val(Object.keys(items));
+                $('#listquanta').val(Object.values(items));
+                $("input.prices:checked").each(function () {
+                    sum = parseInt($(this).val()) * parseInt($(this).closest('.item').find(".quanta").html()) + sum;
+
+                });
+                $("#price").text(sum);
+                sum = 0;
+            });
+        });
+    </script>
+}

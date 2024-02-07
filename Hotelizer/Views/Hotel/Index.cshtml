@@ -1,0 +1,45 @@
+﻿@model IEnumerable<DBConnection.Models.Hotel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Hotels</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped table-bordered" id="hotel-table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Hotel Name</th>
+            <th>Locatione</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts{
+    <script>
+        $('#hotel-table').dataTable({
+            "processing": true,
+            "serverSide": true,
+            "filter": true,
+            "ajax": {
+                "url": "GetHotels",
+                "type": "POST",
+                "datatype": "json"
+            },
+            "columnDefs": [{
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }],
+            "columns": [
+                { "data": "id", "name": "id", "autoWidth": true },
+                { "data": "name", "name": "name", "autoWidth": true },
+                { "data": "location", "name": "location", "autoWidth": true },
+            ]
+        });
+    </script>
+}

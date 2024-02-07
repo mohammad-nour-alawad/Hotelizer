@@ -1,0 +1,189 @@
+﻿@model Client.Models.ServicesViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit your Services</h2>
+
+<section class="probootstrap-section" style="padding-top: 10px !important;">
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-md-8">
+                <div class="row" font-size="1.812rem">
+                    <div>
+                        Room Number: <strong>@ViewBag.book.Room.Id</strong><br /> Room Floor: <strong>@ViewBag.book.Room.FloorNumber</strong> <br />
+                        From Date: <strong>@ViewBag.book.FromDate.Date </strong> <br /> To Date:  <strong>@ViewBag.book.ToDate.Date </strong> <br /> Bill: <strong>@ViewBag.book.Bill</strong>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="color: blueviolet">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-md-8">
+                <div class="row">
+                    <fieldset>
+                        <legend class="link-with-icon">Choose required services</legend>
+                        <div id="categoryservices">
+                            @foreach (var item in ViewBag.oldServices)
+                            {
+                                @if (item.isConsumed)
+                                {
+                                    <span> <i class="fa fa-long-arrow-up"></i> </span>
+                                    <label style="color:black;">  Service:  <strong>@item.ServiceCategory.Service.Name</strong> </label>
+                                    <br />
+                                }
+                                else
+                                {
+                                    <input class="service old" type="checkbox" value="@item.Id" name="@item.ServiceCategory.Service.Name" checked>
+                                    <label for="@item.ServiceCategory.Service.Name" style="color:black;">  Service:  <strong>@item.ServiceCategory.Service.Name</strong> </label>
+                                    <br />
+                                }
+                            }
+                        </div>
+
+                        <div>
+                            @foreach (var item in ViewBag.newServices)
+                            {
+                                <input type="checkbox" class="service new" value="@item.Id" name="@item.Service.Name">
+                                <label for="@item.Service.Name" style="color:black;">  Service:  <strong>@item.Service.Name</strong> </label>
+                                <br />
+                            }
+                        </div>
+
+                        <br>
+                    </fieldset>
+                    <form method="post" asp-action="Edit">
+                        <input asp-for="bookid" type="hidden" value="@ViewBag.book.Id" />
+                        <input id="todelete" type="hidden" asp-for="todelete" />
+                        <input id="tocreate" type="hidden" asp-for="tocreate" />
+                        <div class="form-group" style="margin-bottom: 0.5rem; margin-top: 0.5rem;">
+                            <input type="submit" value="save" class="btn btn-primary" id="save" />
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+
+        @section Scripts{
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    var todelete = [];
+                    var tocreate = [];
+                    $(document).on("click", ".service", function () {
+                        todelete = [];
+                        tocreate = [];
+                        $("input.old:unchecked").each(function () {
+                            todelete.push($(this).val());
+                        });
+                        $("input.new:checked").each(function () {
+                            tocreate.push($(this).val());
+                        });
+                        $("#todelete").val(todelete.toString());
+                        $("#tocreate").val(tocreate.toString());
+
+                    });
+                });
+
+
+            </script>
+
+
+            @*<script>
+
+                $(document).ready(function () {
+
+                    var services = [];
+                    $(document).on("click", ".service", function () {
+                        services = [];
+                        var baseprice = parseInt($("#base_price").text());
+                        var sum = baseprice;
+                        $("input.service:checked").each(function () {
+                            services.push($(this).val());
+                            var price = $('#price' + $(this).val()).text()
+                            price = parseInt(price);
+                            sum += price;
+                            $("#submit").val("Reserve Now For: " + sum + "!")
+                        });
+                        $("#services").val(services.toString());
+                        load_old_services();
+                    });
+
+                    function load_old_services() {
+                        var old_services = $("#services").val();
+                        var old_services_split = old_services.split(',');
+                        $("input.service").each(function () {
+                            item = $(this);
+                            $.each(old_services_split, function (key1, id) {
+
+
+                                if (item.val() == id) {
+
+                                    item.prop("checked", true);
+                                }
+
+                            });
+                        });
+
+                    }
+
+                    $('#catVal').change(function () {
+                        getrooms();
+                        getServiceCategoryCost($('#catVal').val());
+
+                    });
+                    $('#catVal').trigger("change");
+
+
+
+                    function getServiceCategoryCost(Id) {
+                        $.ajax({
+                            type: "Get",
+                            url: "getServiceCategory",
+                            data: {
+                                cat_id: Id,
+                            },
+                            success: function (response) {
+                                var data = JSON.parse(response);
+                                console.log(data);
+                                $("#categoryservices").empty();
+                                $.each(data, function (key, item) {
+                                    var input = `
+                                                     <input class="service" type="checkbox" name="${item.Service.Name}" value="${item.ServiceId}">
+                                                     <label for="${item.Service.Name}" style="color:black;" >  Name:  <strong>${item.Service.Name}</strong> Cost: <strong id="price${item.ServiceId}">${item.Cost} <\strong> </label>
+                                                     <br>`;
+                                    $("#categoryservices").append(input);
+                                });
+                            }
+                        })
+                    }
+
+
+                });
+            </script>*@
+
+
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+        }
+

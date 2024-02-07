@@ -1,0 +1,86 @@
+﻿@model IEnumerable<BuisnessLogic.Dtos.ServiceCategoryBookingDto>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Bookings</h1>
+
+<table class="table table-striped table-bordered" id="booking-table">
+    <thead>
+        <tr>
+
+            <th>
+                Room Number
+            </th>
+            <th>
+                Bill
+            </th>
+            <th>
+                From Date
+            </th>
+            <th>
+                To Date
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Services
+            </th>
+            <th>
+                Edit
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Room.Id)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Bill)
+            </td>
+            <td class="statDate">
+                @Html.DisplayFor(modelItem => item.Booking.FromDate)
+            </td>
+            <td class="endDate">
+                @Html.DisplayFor(modelItem => item.Booking.ToDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Booking.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceCategory.Service.Name)
+            </td>
+            @if ((item.Booking.Status == "Rejected") || (item.Booking.ToDate < DateTime.Now))
+            {
+                <td>
+                   
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.BookingId">Edit</a>
+                </td>
+
+            }
+
+
+        </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $('#booking-table').dataTable();
+    </script>
+}

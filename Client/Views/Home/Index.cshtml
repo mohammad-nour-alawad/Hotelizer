@@ -1,0 +1,546 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row mb30">
+            <div class="col-md-8 col-md-offset-2 probootstrap-section-heading text-center">
+                <h2>Explore our Services</h2>
+                <p class="lead">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                <p><img src="~/img/curve.svg" class="svg" alt="Free HTML5 Bootstrap Template"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="service left-icon probootstrap-animate">
+                    <div class="icon">
+                        <img src="~/img/flaticon/svg/001-building.svg" class="svg" alt="Free HTML5 Bootstrap Template by uicookies.com">
+                    </div>
+                    <div class="text">
+                        <h3>1+ Million Hotel Rooms</h3>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <p><a href="#" class="link-with-icon">Learn More <i class=" icon-chevron-right"></i></a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service left-icon probootstrap-animate">
+                    <div class="icon">
+                        <img src="~/img/flaticon/svg/003-restaurant.svg" class="svg" alt="Free HTML5 Bootstrap Template by uicookies.com">
+                    </div>
+                    <div class="text">
+                        <h3>Food &amp; Drinks</h3>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <p><a href="#" class="link-with-icon">Learn More <i class=" icon-chevron-right"></i></a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service left-icon probootstrap-animate">
+                    <div class="icon">
+                        <img src="~/img/flaticon/svg/004-parking.svg" class="svg" alt="Free HTML5 Bootstrap Template by uicookies.com">
+                    </div>
+                    <div class="text">
+                        <h3>Airport Taxi</h3>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <p><a href="#" class="link-with-icon">Learn More <i class=" icon-chevron-right"></i></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <h3 class="mt0 mb30">Most Booked Rooms</h3>
+                <ul class="probootstrap-owl-navigation absolute right">
+                    <li><a href="#" class="probootstrap-owl-prev2"><i class="icon-chevron-thin-left"></i></a></li>
+                    <li><a href="#" class="probootstrap-owl-next2"><i class="icon-chevron-thin-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <div class="owl-carousel owl-carousel-carousel2">
+                    @foreach (var room in ViewBag.rooms)
+                    {
+                        <a href="@("/Room/Details/"+room.Room.Id)">
+                            <div class="item">
+                                <div class="probootstrap-room">
+                                    <img src="@( "https://localhost:44389" + room.Room.ImageUrl)" class="img-responsive probootstrap-room-img">
+                                    <div class="text">
+                                        <h3> @(room.Room.FloorNumber) </h3>
+                                        <p>Category: <strong>@room.Room.Category.Name</strong></p>
+                                        <p>Specifications: <strong>@room.Spec.Type</strong></p>
+                                        <p class="btn btn-primary">Get Details</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <h3 class="mt0 mb30">Top Users</h3>
+                <ul class="probootstrap-owl-navigation absolute right">
+                    <li><a href="#" class="probootstrap-owl-prev"><i class="icon-chevron-thin-left"></i></a></li>
+                    <li><a href="#" class="probootstrap-owl-next"><i class="icon-chevron-thin-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <div class="owl-carousel owl-carousel-carousel">
+                    @foreach (var user in ViewBag.users)
+                    {
+                        <div class="item">
+                            <div class="probootstrap-room">
+                                <img src="~/img/default.jpg" class="img-responsive probootstrap-room-img" />
+                                <div class="text">
+                                    <h3> @(user.FirstName + " " + user.LastName) </h3>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h2 class="mt0 link-with-icon">Select Service</h2>
+                <form class="probootstrap-form">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="form-field">
+                                    <i class="icon icon-chevron-down"></i>
+                                    <select id='serviceID' class="form-control">
+                                        @foreach (var sers in ViewBag.services)
+                                        {
+                                            <option value="@sers.Key"> @sers.Value </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb30">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <canvas id="usersChart"></canvas>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <canvas id="servicesChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<link href="~/weather.css" rel="stylesheet" />
+<div class="row mb20">
+    <div class="col-md-8 col-md-offset-2 probootstrap-section-heading text-center">
+        <h2>Chech out The Weather!</h2>
+        <p><img src="~/img/curve.svg" class="svg" alt="Free HTML5 Bootstrap Template"></p>
+    </div>
+</div>
+
+<section class="weather-section mb20">
+    <div style="background: rgba(0,0,0,0.3);">
+        <div style=" padding: 20px;">
+            <div class="" style="color: #fff; font-weight:bold;">
+                <div class="current-info">
+                    <div class="date-container">
+                        <div class="time" id="time">
+                            12:30 <span id="am-pm">PM</span>
+                        </div>
+                        <div class="date" id="date">
+                            Monday, 25 May
+                        </div>
+                        <div class="others" id="current-weather-items">
+                        </div>
+                    </div>
+                    <div class="place-container">
+                        <div class="time-zone" id="time-zone">Asia/Kolkata</div>
+                        <div id="country" class="country">IN</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 100%;">
+            <div class="future-forecast">
+                <div class="today" id="current-temp">
+                    <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                    <div class="other">
+                        <div class="day">Monday</div>
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                </div>
+                <div class="weather-forecast" id="weather-forecast">
+                    <div class="weather-forecast-item">
+                        <div class="day">Tue</div>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                    <div class="weather-forecast-item">
+                        <div class="day">Wed</div>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                    <div class="weather-forecast-item">
+                        <div class="day">Thur</div>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                    <div class="weather-forecast-item">
+                        <div class="day">Fri</div>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                    <div class="weather-forecast-item">
+                        <div class="day">Sat</div>
+                        <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
+                        <div class="temp">Night - 25.6&#176; C</div>
+                        <div class="temp">Day - 35.6&#176; C</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // type_holder
+        // <div><label><input type="checkbox" class="types" value="mosque" />Mosque</label></div>
+
+        var types = ['accounting', 'airport', 'amusement_park', 'aquarium', 'art_gallery', 'atm', 'bakery', 'bank', 'bar', 'beauty_salon', 'bicycle_store', 'book_store', 'bowling_alley', 'bus_station', 'cafe', 'campground', 'car_dealer', 'car_rental', 'car_repair', 'car_wash', 'casino', 'cemetery', 'church', 'city_hall', 'clothing_store', 'convenience_store', 'courthouse', 'dentist', 'department_store', 'doctor', 'electrician', 'electronics_store', 'embassy', 'fire_station', 'florist', 'funeral_home', 'furniture_store', 'gas_station', 'gym', 'hair_care', 'hardware_store', 'hindu_temple', 'home_goods_store', 'hospital', 'insurance_agency', 'jewelry_store', 'laundry', 'lawyer', 'library', 'liquor_store', 'local_government_office', 'locksmith', 'lodging', 'mel_delivery', 'meal_takeaway', 'mosque', 'movie_rental', 'movie_theater', 'moving_company', 'museum', 'night_club', 'painter', 'park', 'parking', 'pet_store', 'pharmacy', 'physiotherapist', 'plumber', 'police', 'post_office', 'real_estate_agency', 'restaurant', 'roofing_contractor', 'rv_park', 'school', 'shoe_store', 'shopping_mall', 'spa', 'stadium', 'storage', 'store', 'subway_station', 'synagogue', 'taxi_stand', 'train_station', 'transit_station', 'travel_agency', 'university', 'veterinary_care', 'zoo'];
+        var html = '';
+
+        $.each(types, function (index, value) {
+            var name = value.replace(/_/g, " ");
+            html += '<div><label><input type="checkbox" class="types" value="' + value + '" />' + "&nbsp; " + capitalizeFirstLetter(name) + '</label></div>';
+        });
+
+        $('#type_holder').html(html);
+    });
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    var map;
+    var infowindow;
+    var autocomplete;
+    var countryRestrict = { 'country': 'in' };
+    var selectedTypes = [];
+
+    function initialize() {
+        autocomplete = new google.maps.places.Autocomplete((document.getElementById('address')), {
+            types: ['(regions)'],
+        });
+
+        var pyrmont = new google.maps.LatLng(33.513805, 36.276527);
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: pyrmont,
+            zoom: 12
+        });
+    }
+
+    function renderMap() {
+        // Get the user defined values
+        var address = document.getElementById('address').value;
+        var radius = parseInt(document.getElementById('radius').value) * 1000;
+
+        // get the selected type
+        selectedTypes = [];
+        $('.types').each(function () {
+            if ($(this).is(':checked')) {
+                selectedTypes.push($(this).val());
+            }
+        });
+
+        var geocoder = new google.maps.Geocoder();
+        var selLocLat = 0;
+        var selLocLng = 0;
+
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === 'OK') {
+
+                selLocLat = results[0].geometry.location.lat();
+                selLocLng = results[0].geometry.location.lng();
+
+
+                var pyrmont = new google.maps.LatLng(selLocLat, selLocLng);
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: pyrmont,
+                    zoom: 11
+                });
+
+
+
+                var request = {
+                    location: pyrmont,
+                    radius: radius,
+                    types: selectedTypes
+                };
+
+                infowindow = new google.maps.InfoWindow();
+
+                var service = new google.maps.places.PlacesService(map);
+                service.nearbySearch(request, callback);
+            }
+            else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+    function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+                createMarker(results[i], results[i].icon);
+            }
+        }
+    }
+
+    function createMarker(place, icon) {
+        var placeLoc = place.geometry.location;
+
+        var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location,
+            icon: {
+                url: icon,
+                scaledSize: new google.maps.Size(20, 20) // pixels
+            },
+            animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(marker, 'click', function () {
+            infowindow.setContent(place.name + '<br>' + place.vicinity);
+            infowindow.open(map, this);
+        });
+    }
+</script>
+
+<div class="row mb30">
+    <div class="col-md-8 col-md-offset-2 probootstrap-section-heading text-center">
+        <h2>Search for nearly places</h2>
+        <p><img src="~/img/curve.svg" class="svg" alt="Free HTML5 Bootstrap Template"></p>
+    </div>
+</div>
+
+<div class="row" style="height:100% !important; color: black; border: solid;">
+
+    <div class="col-md-9 col-sm-9 col-lg-9" style="padding: 0;">
+        <div class="probootstrap-animate" id="map" style="height:600px;"></div>
+    </div>
+
+    <div class="probootstrap-animate col-md-3 col-sm-3 col-lg-3" style="padding: 0; padding-left: 10px;">
+        <form name="frm_map" id="frm_map">
+            <table>
+
+                <tr style="margin-bottom:3px;">
+                    <th>Address&nbsp;</th>
+                    <td>
+                        <input type="text" name="address" style="width: 100%;" id="address" value="Damascus, Syria" placeholder="Damascus, Syria">
+                    </td>
+                </tr>
+                <tr style="margin-bottom:3px;">
+                    <th>Radius&nbsp;</th>
+                    <td>
+                        <input type="text" name="radius" id="radius" style="width: 100%;" value="10" placeholder="In KM">
+                    </td>
+                </tr>
+
+                <tr style="margin-bottom:3px;">
+                    <th>Types</th>
+                    <td>
+                        <div id="type_holder" style="overflow-y: scroll; max-height:491px;">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" value="Show" id="submit" onclick="renderMap();">
+                        <input type="reset" value="Reset">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCNujtx1JxpWTI1KoOk_1WYXDzq8pXr_r0&libraries=places&callback=initialize" async defer></script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/excanvas/r3/excanvas.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/chart.js/0.2/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+
+<script>
+    const ctx1 = document.getElementById('usersChart').getContext('2d');
+    const ctx2 = document.getElementById('servicesChart').getContext('2d');
+
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "home/getservices",
+            success: function (response) {
+                var datas = JSON.parse(response);
+                var labelss = []
+                var counts = []
+                $.each(datas, function (key, item) {
+                    labelss.push(item.Name);
+                    counts.push(item.Count);
+                });
+                new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelss,
+                        datasets: [{
+                            label: 'Services Usage',
+                            data: counts,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)',
+                                'rgba(255, 99, 132, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)',
+                                'rgba(255, 99, 132, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            },
+            failure: function (response) {
+                alert('There was an error.');
+            }
+        });
+
+        var chart = new Chart(ctx1, {
+            type: 'pie'
+        });
+        $("#serviceID").change(function () {
+            var id = $(this).val();
+            $.ajax({
+                type: "GET",
+                url: "home/getservicetopusers",
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    var datas = JSON.parse(response);
+                    var labelss = []
+                    var counts = []
+                    $.each(datas, function (key, item) {
+                        labelss.push(item.Name);
+                        counts.push(item.Count);
+                    });
+                    chart.destroy();
+
+                    chart = new Chart(ctx1, {
+                        type: 'pie',
+                        data: {
+                            labels: labelss,
+                            datasets: [{
+                                label: 'Top Users for Service',
+                                data: counts,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                ],
+                                borderColor: [
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                },
+                failure: function (response) {
+                    alert('There was an error.');
+                }
+            });
+        });
+        $("#serviceID").trigger("change");
+    });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="~/weather.js"></script>

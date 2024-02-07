@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+<style>
+    .btn.btn-search {
+        border-radius: 3px;
+        background: #f49999;
+        color: #fff;
+        font-size: 12.5px !important;
+    }
+
+    .search-input:focus {
+        outline: none;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .zoom {
+        transition: transform .2s;
+        
+    }
+        .zoom:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+    #room-cards:hover .zoom{
+        opacity: 0.6;
+    }
+    #room-cards:hover .zoom:hover {
+        opacity: 1;
+    }
+    .ui-autocomplete-category {
+        font-weight: bold;
+        padding: .2em .4em;
+        margin: .8em 0 .2em;
+        line-height: 1.5;
+    }
+</style>
+
+<section>
+    <div class="bg">
+        <div class="container">
+            <div class="col-md-6 col-lg-6 col-12 mx-auto my-auto search-box" style="width:100%">
+                <div class="input-group form-container">
+                    <input id="searchText" type="text" name="search" class="form-control search-input" placeholder="Search" autofocus="autofocus">
+
+                    <span class="input-group-btn">
+                        <button class="btn btn-search">
+                            <i class="icon-search"></i>
+                        </button>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="probootstrap-section">
+    <div class="container room-cards-container">
+        <div id="room-cards" class="row">
+            @foreach (var roomspec in ViewBag.rooms)
+            {
+                <a href="@( "Room/Details/" + roomspec.Room.Id)" >
+                    <div class="col-md-4 col-sm-6 col-xs-12 zoom">
+
+                        <div class="probootstrap-room">
+                            <img src="@( "https://localhost:44389" + roomspec.Room.ImageUrl) " class="probootstrap-room-img img-responsive ">
+                            <div class="text">
+                                <h3>@roomspec.Room.FloorNumber</h3>
+                                <p>Category Name:  <strong>@roomspec.Room.Category.Name</strong></p>
+                                <p>Specifications: <strong>@roomspec.Spec.Type</strong></p>
+                                <p>Starting At: <strong>@roomspec.Room.Category.BasePrice ! </strong></p>
+                                <p class="btn btn-primary">Get Details</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $.widget("custom.searchcomplete", $.ui.autocomplete, {
+                _create: function () {
+                    this._super();
+                    this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+                },
+                _renderMenu: function (ul, items) {
+                    var that = this,
+                        currentCategory = "";
+                    $.each(items, function (index, item) {
+                        var li;
+                        if (item.category != currentCategory) {
+                            ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
+                            currentCategory = item.category;
+                        }
+                        li = that._renderItemData(ul, item);
+                        if (item.category) {
+                            li.attr("aria-label", item.category + " : " + item.label);
+                        }
+                    });
+
+                }
+            });
+            $('#searchText').searchcomplete({
+                source: "room/search"
+            });
+
+            $('#searchText').keyup(function () {
+                var searchText = $(this).val();
+                var expression = RegExp(searchText, "i");
+
+
+                $('#room-cards').remove();
+                $.ajax({
+                    type: "Get",
+                    url: "room/getrooms",
+                    data: { searchValue: searchText },
+                    success: function (response) {
+                        var data = JSON.parse(response);
+                        console.log(data);
+                        var html_body = `<div class="row" id="room-cards">
+
+                                            </div>`;
+                        $('.room-cards-container').append(html_body);
+                        $.each(data, function (key, item) {
+                            console.log(item.Room.Status.search(expression));
+                            var html_search = `<a href="${"Room/Details/" + item.Room.Id}">
+                                                    <div class="col-md-4 col-sm-6 col-xs-12 zoom">
+                                                        <div class="probootstrap-room">
+                                                            <img src="${"https://localhost:44389" + item.Room.ImageUrl} " class="probootstrap-room-img img-responsive ">
+                                                            <div class="text">
+                                                                <h3>${item.Room.FloorNumber}</h3>
+                                                                <p>Category Name: <strong>${item.Room.Category.Name}</strong></p>
+                                                                <p>Specifications: <strong>${item.Spec.Type}</strong></p>
+                                                                <p>Starting At: <strong>${item.Room.Category.BasePrice} ! </strong></p>
+                                                                <p class="btn btn-primary">Get Details</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>`;
+
+                            $('#room-cards').append(html_search);
+
+                        });
+                    }
+                })
+            });
+            $(document).on("click", ".ui-menu-item", function () {
+                $('#searchText').trigger('keyup');
+            });
+
+        });
+    </script>
+}

@@ -1,0 +1,128 @@
+﻿@model Hotelizer.Models.ServicesVM
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit Client's Services</h1>
+<hr />
+
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row probootstrap-gutter40">
+            <div class="col-md-8">
+                <div class="row" font-size="1.812rem" >
+                    <div class="form-group">
+                        <label class="control-label">Room Number: @ViewBag.book.Room.Id"</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Room Floor: @ViewBag.book.Room.FloorNumber"</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">User: @ViewBag.book.ApplicationUser.Email" </label>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">From Date: @ViewBag.book.FromDate" </label>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"> To Date: @ViewBag.book.ToDate"</label>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Bill: @ViewBag.book.Bill </label>
+
+                    </div>
+                    @*<div class="form-group">
+            <label class="control-label">Category: @ViewBag.services.ServiceCategory.Category.Name</label>
+
+        </div>*@
+
+                </div>
+        </div>
+
+
+        <div class="row" style="color: blueviolet">
+        </div>
+
+</div>
+        </div>
+    </section>
+
+<section class="probootstrap-section">
+            <div class="container">
+                <div class="row probootstrap-gutter40">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <fieldset>
+                                <legend class="link-with-icon">Edit the Consumed Services</legend>
+                                <div id="categoryservices">
+                                    @foreach (var item in ViewBag.services)
+                                    {
+                                       @if (item.isConsumed)
+                                        {
+                                            <span> <i class="fa fa-long-arrow-up"></i> </span>
+                                            <label style="color:black;">  Service:  <strong>@item.ServiceCategory.Service.Name</strong> </label>
+                                            <br />
+                                        }
+                                        else
+                                        {
+                                            <input class="service" type="checkbox" value="@item.ServiceCategory.Service.Id" name="@item.ServiceCategory.Service.Name">
+                                            <label for="@item.ServiceCategory.Service.Name" style="color:black;">  Service:  <strong>@item.ServiceCategory.Service.Name</strong> </label>
+                                            <br />
+                                        }
+
+
+
+                                    }
+                                </div>
+                                <form method="post" asp-action="Edit">
+                                    <input asp-for="BookId" type="hidden" value="@ViewBag.book.Id" />
+
+                                    <input id="services" asp-for="services" type="hidden" />
+                                    <div class="form-group" style="margin-bottom: 0.5rem; margin-top: 0.5rem;">
+                                        <input type="submit" value="save" class="btn btn-primary" id="save" />
+                                    </div>
+
+                                </form>
+
+
+                                <br>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+
+        @section Scripts{
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    var services = [];
+                    $(document).on("click", ".service", function () {
+                        services = [];
+                        $("input.service:checked").each(function () {
+                            services.push($(this).val());
+                        });
+                        $("#services").val(services.toString());
+                    });
+                });
+
+
+            </script>
+
+
+
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+
+        }

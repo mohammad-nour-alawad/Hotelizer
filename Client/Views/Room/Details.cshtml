@@ -1,0 +1,193 @@
+﻿@model DBConnection.Models.Room
+@{
+    ViewData["Title"] = "Room " + ViewBag.room.Room.Id + " Details";
+}
+
+<style>
+
+    .bottom-left {
+        position: absolute;
+        left: 16px;
+        bottom: 0px;
+    }
+
+    .probootstrap-section{
+        padding : 0;
+        margin-top: 5vh;
+        margin-bottom: 0;
+    }
+    .border{
+        border: solid 2px green;
+    }
+</style>
+
+
+
+<section class="probootstrap-slider flexslider probootstrap-inner">
+    <ul class="slides">
+        <li style="background-image: url(@("https://localhost:44389" + ViewBag.room.Room.ImageUrl));" class="overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <div class="probootstrap-slider-text text-center ">
+                            <h1 class="probootstrap-heading probootstrap-animate">Room Number: @ViewBag.room.Room.FloorNumber</h1>
+                            <div class="probootstrap-animate probootstrap-sub-wrap">@ViewBag.room.Room.Category.Name, @ViewBag.room.Spec.Type</div>
+                            <p class="probootstrap-animate text-white display-1">
+                                <a id="reserve" class="btn btn-primary" role="button"> Reserve Now For: 
+                                    <strong id="price">@ViewBag.room.Room.Category.BasePrice</strong>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <h3 class="mt0 mb30">Services</h3>
+                <ul class="probootstrap-owl-navigation absolute right">
+                    <li><a href="#" class="probootstrap-owl-prev"><i class="icon-chevron-thin-left"></i></a></li>
+                    <li><a href="#" class="probootstrap-owl-next"><i class="icon-chevron-thin-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <div class="owl-carousel owl-carousel-carousel">
+                        @foreach (var service in ViewBag.room.Room.Category.ServiceCategory)
+                        {
+                    <div class="item">
+                        <div class="probootstrap-room">
+                            <img src="@( "https://localhost:44389" + service.Service.ImageUrl)" class="img-responsive probootstrap-room-img">
+                            <div class="text">
+                                <h3> @service.Service.Name </h3>
+                                <p>Price: <strong>@service.Cost</strong></p>
+                            </div>
+                        </div>
+                        <input type="checkbox" value="@service.Cost" style="display:none;" class="prices">
+                        <input type="checkbox" value="@service.Service.Id" style="display:none;" class="ids">
+                    </div>
+                               
+                         }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="probootstrap-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <h3 class="mt0 mb30">Similar Rooms</h3>
+                <ul class="probootstrap-owl-navigation absolute right">
+                    <li><a href="#" class="probootstrap-owl-prev2"><i class="icon-chevron-thin-left"></i></a></li>
+                    <li><a href="#" class="probootstrap-owl-next2"><i class="icon-chevron-thin-right"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 probootstrap-relative">
+                <div class="owl-carousel owl-carousel-carousel2">
+                    @foreach (var room in ViewBag.similar_rooms)
+                    {
+                        <a href="@(room.Room.Id)">
+                            <div class="item">
+                                <div class="probootstrap-room">
+                                    <img src="@( "https://localhost:44389" + room.Room.ImageUrl)" class="img-responsive probootstrap-room-img">
+                                    <div class="text">
+                                        <h3> @(room.Room.FloorNumber) </h3>
+                                        <p>Category: <strong>@room.Room.Category.Name</strong></p>
+                                        <p>Specifications: <strong>@room.Spec.Type</strong></p>
+                                        <p class="btn btn-primary">Get Details </p>                       
+                                    </div>
+                            </div>
+                        </div>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            var baseprice = parseInt($("#price").text());
+            var sum = baseprice;
+            $(".item").click(function () {
+                var selecteditem = $(this).find(".prices");
+                var selectedid = $(this).find(".ids");
+
+
+                if (selecteditem.prop("checked") == true) {
+                    selecteditem.prop("checked", false);
+                    selectedid.prop("checked", false);
+
+                    $(this).find(".probootstrap-room").removeClass("border")
+                }
+                else {
+                    selecteditem.prop("checked", true);
+                    selectedid.prop("checked", true);
+                    $(this).find(".probootstrap-room").addClass("border")
+                }
+                $("input.prices:checked").each(function () {
+                    sum = parseInt($(this).val()) + sum;
+
+                });
+
+                $("#price").text(sum);
+                sum = baseprice;
+            });
+
+            $("#reserve").click(function () {
+                services = [];
+                $("input.ids:checked").each(function () {
+                    services.push($(this).val());
+                });
+                var input_services = services.toString();
+                var form = document.createElement("form");
+                var element1 = document.createElement("input");
+                var element2 = document.createElement("input");
+                var element3 = document.createElement("input");
+                var element4 = document.createElement("input");
+
+
+
+                form.method = "GET";
+                form.action = "/Booking/reservation";
+
+                element1.value = input_services;
+                element1.name = "services";
+                form.appendChild(element1);
+
+                element2.value =  @ViewBag.room.RoomId;
+                element2.name = "RoomId";
+                form.appendChild(element2);
+
+                element3.value =  @ViewBag.catID;
+                element3.name = "categoryID";
+                form.appendChild(element3);
+
+                element4.value =  @ViewBag.specID;
+                element4.name = "specificationID";
+                form.appendChild(element4);
+
+
+
+                document.body.appendChild(form);
+                console.log(form);
+                form.submit();
+            });
+        });
+    </script>
+}
