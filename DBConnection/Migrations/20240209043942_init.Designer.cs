@@ -7,19 +7,23 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace DBConnection.Migrations
 {
     [DbContext(typeof(fiveSeasonDBContext))]
-    [Migration("20240129161343_init")]
+    [Migration("20240209043942_init")]
     partial class init
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.21")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("DBConnection.Models.ApplicationUser", b =>
                 {
@@ -35,8 +39,8 @@ namespace DBConnection.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -56,12 +60,12 @@ namespace DBConnection.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -79,29 +83,30 @@ namespace DBConnection.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
+                        .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("DBConnection.Models.Booking", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float>("Bill")
                         .HasColumnType("real");
@@ -114,9 +119,9 @@ namespace DBConnection.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("ToDate")
                         .HasColumnType("date");
@@ -137,8 +142,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float>("BasePrice")
                         .HasColumnType("real");
@@ -148,9 +154,9 @@ namespace DBConnection.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -161,8 +167,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float>("Cost")
                         .HasColumnType("real");
@@ -175,9 +182,9 @@ namespace DBConnection.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -190,14 +197,15 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -208,20 +216,21 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Location")
                         .IsRequired()
-                        .HasColumnType("varchar(500)")
                         .HasMaxLength(500)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -232,8 +241,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
@@ -257,9 +267,10 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("ID")
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -275,9 +286,9 @@ namespace DBConnection.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -292,8 +303,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -314,17 +326,18 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -335,8 +348,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
@@ -360,8 +374,9 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
@@ -385,14 +400,15 @@ namespace DBConnection.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
                         .HasMaxLength(50)
-                        .IsUnicode(false);
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -409,29 +425,30 @@ namespace DBConnection.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
+                        .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -447,15 +464,16 @@ namespace DBConnection.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -471,18 +489,18 @@ namespace DBConnection.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -495,7 +513,7 @@ namespace DBConnection.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -510,7 +528,7 @@ namespace DBConnection.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -519,19 +537,19 @@ namespace DBConnection.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(128)")
-                        .HasMaxLength(128);
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("DBConnection.Models.Booking", b =>
@@ -539,13 +557,17 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Room", "Room")
                         .WithMany("Booking")
                         .HasForeignKey("RoomId")
-                        .HasConstraintName("FK_Booking_Room")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Booking_Room");
 
                     b.HasOne("DBConnection.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Booking")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_User_Booking");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("DBConnection.Models.FoodItem", b =>
@@ -554,6 +576,8 @@ namespace DBConnection.Migrations
                         .WithMany("FoodItem")
                         .HasForeignKey("FoodItemTypeId")
                         .HasConstraintName("FK_FoodItem_FoodItemType");
+
+                    b.Navigation("FoodItemType");
                 });
 
             modelBuilder.Entity("DBConnection.Models.Order", b =>
@@ -561,14 +585,18 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
-                        .HasConstraintName("FK_orders_Booking")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_orders_Booking");
 
                     b.HasOne("DBConnection.Models.FoodItem", "FoodItem")
                         .WithMany()
                         .HasForeignKey("FoodItemId")
-                        .HasConstraintName("FK_orders_FoodItem")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_orders_FoodItem");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("FoodItem");
                 });
 
             modelBuilder.Entity("DBConnection.Models.Room", b =>
@@ -576,14 +604,18 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Catergory", "Category")
                         .WithMany("Room")
                         .HasForeignKey("CategoryId")
-                        .HasConstraintName("FK_Room_Catergory")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Room_Catergory");
 
                     b.HasOne("DBConnection.Models.Hotel", "Hotel")
                         .WithMany("Room")
                         .HasForeignKey("HotelId")
-                        .HasConstraintName("FK_Room_Hotel")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_Room_Hotel");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Hotel");
                 });
 
             modelBuilder.Entity("DBConnection.Models.RoomSpecification", b =>
@@ -591,14 +623,18 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .HasConstraintName("FK_RoomSpecification_Room")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_RoomSpecification_Room");
 
                     b.HasOne("DBConnection.Models.Specification", "Spec")
                         .WithMany()
                         .HasForeignKey("SpecId")
-                        .HasConstraintName("FK_RoomSpecification_Specification")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_RoomSpecification_Specification");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Spec");
                 });
 
             modelBuilder.Entity("DBConnection.Models.ServiceCategory", b =>
@@ -606,14 +642,18 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Catergory", "Category")
                         .WithMany("ServiceCategory")
                         .HasForeignKey("CategoryId")
-                        .HasConstraintName("FK_ServiceCategory_Catergory")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_ServiceCategory_Catergory");
 
                     b.HasOne("DBConnection.Models.Service", "Service")
                         .WithMany("ServiceCategory")
                         .HasForeignKey("ServiceId")
-                        .HasConstraintName("FK_ServiceCategory_Service")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_ServiceCategory_Service");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("DBConnection.Models.ServiceCategoryBooking", b =>
@@ -621,15 +661,19 @@ namespace DBConnection.Migrations
                     b.HasOne("DBConnection.Models.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
-                        .HasConstraintName("FK_ServiceCategoryBooking_Booking")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_ServiceCategoryBooking_Booking");
 
                     b.HasOne("DBConnection.Models.ServiceCategory", "ServiceCategory")
                         .WithMany()
                         .HasForeignKey("ServiceCategoryId")
-                        .HasConstraintName("FK_ServiceCategoryBooking_ServiceCategory")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_ServiceCategoryBooking_ServiceCategory");
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("ServiceCategory");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -681,6 +725,38 @@ namespace DBConnection.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DBConnection.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("DBConnection.Models.Catergory", b =>
+                {
+                    b.Navigation("Room");
+
+                    b.Navigation("ServiceCategory");
+                });
+
+            modelBuilder.Entity("DBConnection.Models.FoodItemType", b =>
+                {
+                    b.Navigation("FoodItem");
+                });
+
+            modelBuilder.Entity("DBConnection.Models.Hotel", b =>
+                {
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("DBConnection.Models.Room", b =>
+                {
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("DBConnection.Models.Service", b =>
+                {
+                    b.Navigation("ServiceCategory");
                 });
 #pragma warning restore 612, 618
         }

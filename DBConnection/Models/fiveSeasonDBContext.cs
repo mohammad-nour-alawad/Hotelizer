@@ -39,7 +39,7 @@ namespace DBConnection.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=MNOURALAWAD;Initial Catalog=fiveSeasonDB;Persist Security Info=True;User ID=sa;Password=abd@2003");
+                optionsBuilder.UseSqlServer("Data Source=MNOURALAWAD;Initial Catalog=fiveSeasonDB;Persist Security Info=True;TrustServerCertificate=true;User ID=sa;Password=abd@2003");
             }
         }
 
