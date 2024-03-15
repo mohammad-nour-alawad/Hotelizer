@@ -4,7 +4,7 @@
 ASP .NET Core MVC project, with SQL Server Database.
 
 Built based on the following key concepts:
-- **MVC** Architector.
+- **MVC** and **N-tier** Architectors.
 - **Unit of Work** (UOW) and **Repository** design patterns.
 - **REST APIs**.
 - **Service Pool**
